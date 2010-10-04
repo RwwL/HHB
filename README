@@ -1,0 +1,8 @@
+A mashup of Hungry Hungry Hippos and Angry Birds, JavaScript + HTML5 canvas element.
+
+Right now all images in the repo are embedded directly in the source as data URLs to save on HTTP requests.
+
+Possible TODO items:
+	- circular playfield instead of square
+	- find workaround for Firefox typeaheadfind issue on keypress
+	- small bird images in the "controls" legend
