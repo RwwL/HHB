@@ -221,14 +221,13 @@
 		<!-- turn off display:none on #report canvas for debugging -->
 		<canvas id="report" width="500" height="500"></canvas>
 		<script type="text/javascript">
-			
-			
+
 			var c, s, r, northBird, southBird, eastBird, westBird;
 			var ballRadius = 10;
 			var intervalId = 0;
 			var pfWidth = pfHeight = 500;
 			var firstDraw = true;
-			var pigCount = 24;
+			var pigCount = 50;
 			var pigs = [];
 			var capturedPigs = [];
 			var birdCount = 4;
@@ -376,6 +375,7 @@
 			function gameOver() {
 				
 				clearInterval(intervalId);
+				unbindKeyboardHandlers();
 				
 				c.fillStyle = "rgba(0,0,0, .8)";
 				c.beginPath();
@@ -478,49 +478,53 @@
 			  
 			}
 			
-			$(window).keypress(function(e){
-			 	if(e.keyCode == 84 || e.keyCode == 66 || e.keyCode == 76 || e.keyCode == 65 ) {
-			 	// typeaheadfind driving me nuts, sorry about any other key commands this screws up, Firefox users...
-			 		e.preventDefault();
-			 		e.stopPropagation();
-			 		e.stopImmediatePropagation();
-			 		return false;
-			 	}
-			 	else {
-				 	return true;
-				}
-			});
+			function bindKeyboardHandlers() {
+				$(document).keypress(function(e){
+				 	if(e.keyCode == 84 || e.keyCode == 66 || e.keyCode == 76 || e.keyCode == 65 ) {
+				 	// typeaheadfind driving me nuts, sorry about any other key commands this screws up, Firefox users...
+				 		e.preventDefault();
+				 		e.stopPropagation();
+				 		e.stopImmediatePropagation();
+				 		return false;
+				 	}
+				 	else {
+					 	return true;
+					}
+				}).keydown(function(e) {
+					switch(e.keyCode) {
+						case 84: // T
+							e.preventDefault();
+							if (!northBird.launched) {
+								northBird.launch();
+							}
+							break;
+						case 66: // B
+							e.preventDefault();
+							if (!southBird.launched) {
+								southBird.launch();
+							}
+							break;
+						case 76: // L
+							e.preventDefault();
+							if (!eastBird.launched) {
+								eastBird.launch();
+							}
+							break;
+						case 65: // A
+							e.preventDefault();
+							if (!westBird.launched) {
+								westBird.launch();
+							}
+							break;
+						default:
+							break;
+					}
+				});
+			}
 			
-			$(document).keydown(function(e) {
-				switch(e.keyCode) {
-					case 84: // T
-						e.preventDefault();
-						if (!northBird.launched) {
-							northBird.launch();
-						}
-						break;
-					case 66: // B
-						e.preventDefault();
-						if (!southBird.launched) {
-							southBird.launch();
-						}
-						break;
-					case 76: // L
-						e.preventDefault();
-						if (!eastBird.launched) {
-							eastBird.launch();
-						}
-						break;
-					case 65: // A
-						e.preventDefault();
-						if (!westBird.launched) {
-							westBird.launch();
-						}
-						break;
-					default:
-						break;
-				}
-			});
+			function unbindKeyboardHandlers() {
+				$(document).unbind('keypress keydown');
+			}
 			
 			function startDirectionRandomizer() {
 				var num = (Math.floor(Math.random()*5)) + 1;
@@ -556,11 +560,11 @@
 				for(i=0; i<pigCount; i++) {
 					
 					pigs.push( new Pig(
-								Math.floor(Math.random()*50) + 225, // start X
-								Math.floor(Math.random()*50) + 225, // start Y
+								Math.floor(Math.random()*200) + 150, // start X
+								Math.floor(Math.random()*200) + 150, // start Y
 								Math.floor(Math.random()*6) +  1, 	// imgNum
-								(Math.floor(Math.random()*5) + 5) * startDirectionRandomizer(),	// xVel
-								(Math.floor(Math.random()*5) + 5) * startDirectionRandomizer() 	// yVel
+								(Math.ceil(Math.random()*15)) * startDirectionRandomizer(),	// xVel
+								(Math.ceil(Math.random()*15)) * startDirectionRandomizer() 	// yVel
 							)
 						);						
 				}
@@ -590,6 +594,13 @@
 					}
 					pigs[i].width = pigs[i].pigImg.width;
 					pigs[i].height = pigs[i].pigImg.height;
+					
+					//make sure there aren't any pigs that are too slow
+					if (pigs[i].xVel < 2 && pigs[i].yVel < 2) {
+						var prop = (startDirectionRandomizer() == 1) ? pigs[i].xVel : pigs[i].yVel;
+					 	prop = Math.floor(Math.random()*5) + 5;
+					}
+					
 				}
 				
 				northBird 	= new Bird( 250,   0, '#ffffff', 'y',  1, 'n', birdImgs.whiteBird, 250, 150 ); 
@@ -601,6 +612,7 @@
 
 				for(i=0; i<birdCount; i++)
 				{
+					birds[i].score = 0;
 					drawCaptureArea(birds[i]);
 					drawBird(birds[i]);
 				}
@@ -609,11 +621,13 @@
 				$('#hhb').unbind('click');
 				$('#start').unbind('click').text('play').toggle(
 					function() {
+						bindKeyboardHandlers();
 						$(this).text('pause');
 						intervalId = setInterval(draw, 25);
 						return intervalId;
 					},
 					function() {
+						unbindKeyboardHandlers();
 						$(this).text('continue');
 						clearInterval(intervalId);
 					}
