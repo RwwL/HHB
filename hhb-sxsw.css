@@ -1,0 +1,212 @@
+body, html {
+	margin: 0;
+	padding: 0;
+	background: #2a8975; /* rgb(42,137,117) */
+	color: white;				
+	font-size: 18px;
+	line-height: 24px;
+	font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+#wrap {
+	width: 1024px;
+	height: 768px;
+	position: absolute;
+}
+
+a {
+	color: white;
+}
+
+a:visited {
+	color: #e0e0e0;
+}
+
+h1 {
+	margin: 20px 0;
+	padding: 0;
+}
+
+#logo {
+	display: block;
+	margin: 0 auto;			
+}
+
+#playfield {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 1024px;
+	height: 768px;
+}
+
+#hhb, #static {
+	position: absolute;
+	background: transparent; 
+	display: block;
+	margin: 0px auto;
+}
+
+#static {
+	background: #e0e0e0; /* TODO make this white once circular playfield is set up */
+}
+
+#wrap > b {
+	position: absolute;
+	top: 20px;
+	background: rgba(0,0,0, .25);
+	-webkit-border-radius: 8px;
+	color: white;
+	text-shadow: #222 3px 3px 7px;
+	display: block;
+	text-align: center;
+	font-family: sans-serif;
+	padding: 16px 24px 18px;
+	font-size: 36px;
+}
+
+#eScore, #wScore {
+
+}
+
+#eScore {
+	right: 20px;
+}
+
+#wScore {
+	left: 20px
+}
+
+#mask {
+	position: absolute;
+	width: 1024px;
+	height: 768px;
+	background: rgba(42,137,117, .76);
+	-webkit-transition: -webkit-transform ease-out 500ms;
+	-webkit-transform: translate(0,0);
+}
+
+#mask.offscreen {
+	-webkit-transform: translate(0,-800px);
+}
+
+#details {
+	position: absolute;
+	top: 150px;
+	left: 50%;
+	width: 420px;
+	background: white;
+	color: #333;
+	text-align: center;
+	padding: 20px 30px;
+	margin: 0 0 0 -255px;
+	-webkit-border-radius: 30px;
+	-moz-border-radius: 30px;
+	border-radius: 30px;
+	-webkit-box-shadow: #555 0 0 20px 4px;
+}
+
+h1 {
+	margin: 0; 
+	padding: 0;
+}
+
+p {
+	margin: 20px 0px;
+	padding: 0;
+}
+
+#feedback {
+	text-align: center;
+	line-height: 24px;
+}
+
+#disclaimer {
+	text-align: center;
+	font-style: italic;
+	font-size: 14px;
+	line-height: 20px;
+	color: #555;
+	margin: 30px 0 15px;
+}
+
+h2 {
+	font-size: 18px;
+	text-shadow: #666 2px 2px 4px;
+	margin: 0 0 12px 0;
+	text-align: center;
+}
+
+ul {
+	margin: 0 0 24px 0;
+	padding: 0;
+	list-style: none;
+}
+
+li {
+	margin: 0 0 10px 0;
+	padding: 0;
+	text-align: center;
+	font-weight: bold;
+	font-size: 16px;
+	text-shadow: #666 2px 2px 4px;
+}
+
+li b {
+	display: inline-block;
+	width: 18px;
+	height: 18px;
+	margin: 0;
+	font-weight: bold;
+	position: relative;
+	top: 4px;
+	-webkit-border-radius: 100px;
+	-moz-border-radius: 100px;
+	border-radius: 100px;
+}
+
+li span {
+	margin: 0 6px;
+}
+
+#white { background: white; }
+
+#blue  { background: #64acc8; }
+
+#red   { background: #d5002c }
+
+#black { background: black; }
+
+#start {
+	border: none;
+	display: block;
+	margin: 24px auto 18px;
+	font-size: 24px;
+	padding: 8px 0 12px;
+	width: 65%;
+	-webkit-border-radius: 1000px;
+	background: -webkit-gradient(linear, 0 0, 0 bottom, from(rgba(255,255,255,0.4)), to(rgba(255,255,255,0.0))), #1c3494;
+	color: white;
+	text-shadow: #222 1px 1px 2px;
+	-webkit-box-shadow: 0 2px 4px rgba(0,0,0, .5);
+}
+			
+#start:hover {
+	background: -webkit-gradient(linear, 0 0, 0 bottom, from(rgba(255,255,255,0.4)), to(rgba(255,255,255,0.1))), #1c3494;
+}
+
+#start:active {
+	background: -webkit-gradient(linear, 0 0, 0 bottom, from(rgba(0,0,0,0.4)), to(rgba(0,0,0,0.0))), #1c3494;
+}
+
+#start:focus {
+	outline: none;
+}
+
+#report {
+	border: solid 1px lime;
+	position: absolute;
+	top: 75px;
+	left: 900px;
+	display: none; /* remove for debugging view canvas */
+}
