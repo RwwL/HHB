@@ -4,7 +4,7 @@ var intervalId = 0;
 var pfWidth = 1024;
 var pfHeight = 768;
 var firstDraw = true;
-var pigCount = 5;
+var pigCount = 99;
 var pigs = [];
 var capturedPigs = [];
 var birdCount = 2;
@@ -13,7 +13,7 @@ var captureOffset = 150;
 var pigStartRadius = 250;
 var pigStartXOffset = (pfWidth - pigStartRadius) / 2;
 var pigStartYOffset = (pfHeight - pigStartRadius) / 2;
-var gameState; // just simple strings: isInitialized, isPlaying, isPaused
+var gameState;
 var gameStates = {
 	isInitialized: 0,
 	isPlaying: 1,
@@ -107,14 +107,14 @@ function Bird(x, y, color, axis, direction, id, imgSrc, captureX, captureY) {
 	this.capture = function() {
 		
 		// draw capture area on test canvas
-/*
+		/*
 		r.clearRect(0, 0, 500, 500);
 		r.fillStyle = '#ffffff';
 		r.beginPath();	
 	 	r.arc(this.captureX, this.captureY, this.captureRadius, 0, Math.PI*2, false);
 		r.closePath();
 		r.fill();
-*/	
+		*/	
 
 		for(i=0; i<pigCount; i++) {
 			
@@ -173,7 +173,7 @@ function gameOver() {
 
 function drawCaptureArea(bird) {
 
-	s.fillStyle = 'rgba(255,255,255, 0.3)';
+	s.fillStyle = 'rgba(255,255,255, 0.8)';
 	s.beginPath();	
  	s.arc(bird.captureX, bird.captureY, bird.captureRadius, 0, Math.PI*2, false);
 	s.closePath();
@@ -212,7 +212,7 @@ function drawBird(bird) {
 	var faceOffsetY;
 	switch(bird.id) {
 		case 'e':
-			faceOffsetX = -120;
+			faceOffsetX = -130;
 			faceOffsetY = -25;
 			break;
 		case 'w':
@@ -243,6 +243,9 @@ function bindGameplayHandlers() {
 					westBird.launch();
 				}
 				break;
+			case 13: // enter
+				e.preventDefault();
+				nudgeBoard();			
 			default:
 				break;
 		}
@@ -392,6 +395,15 @@ function draw() {
 	// how the hell do real game-loop developers do this?
 	//firstDraw = false;
   	
+}
+
+function nudgeBoard() {
+	for(i=0; i<pigCount; i++) {
+		if (pigs[i].inPlay) {
+			pigs[i].xVel += (Math.floor(Math.random()*4) + 3);
+			pigs[i].yVel -= (Math.floor(Math.random()*4) + 3);
+		}
+	}
 }
 
 function bindPersistentControls() {

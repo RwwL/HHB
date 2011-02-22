@@ -136,7 +136,7 @@ p {
 	margin: 24px auto 18px;
 	font-size: 24px;
 	padding: 8px 0 12px;
-	width: 65%;
+	width: 50%;
 	-webkit-border-radius: 1000px;
 	background: -webkit-gradient(linear, 0 0, 0 bottom, from(rgba(255,255,255,0.4)), to(rgba(255,255,255,0.0))), #1c3494;
 	color: white;
