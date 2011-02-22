@@ -13,8 +13,13 @@ var captureOffset = 150;
 var pigStartRadius = 250;
 var pigStartXOffset = (pfWidth - pigStartRadius) / 2;
 var pigStartYOffset = (pfHeight - pigStartRadius) / 2;
-//var gameStates = { 'firstLoad', 'isPlaying', ' }
-//var gameState = gameStates. 
+var gameState; // just simple strings: isInitialized, isPlaying, isPaused
+var gameStates = {
+	isInitialized: 0,
+	isPlaying: 1,
+	isPaused: 2,
+	isOver: 3
+}
 
 // preload
 for(var prop in birdImgs) {
@@ -143,36 +148,27 @@ function inCaptureArea(centerX, centerY, cRadius, pointX, pointY) {
 
 function gameOver() {
 	
+	gameState = gameStates.isOver;
 	clearInterval(intervalId);
-	
-	c.fillStyle = "rgba(0,0,0, .8)";
-	c.beginPath();
-	c.rect(0, 0, pfWidth, pfHeight);
-	c.closePath();
-	c.fill();
-
-	$('#hhb').click(preReset);
-	
-	var cv = document.getElementById('hhb');
-	if( cv.getContext && typeof cv.getContext('2d').fillText == 'function') {
-		
-		c.fillStyle = "rgb(255,255,255)";
-		c.strokeStyle = "rgb(255,255,255)";
-		c.font = "bold 48px sans-serif";
-		c.textAlign = "center";
-		c.fillText("game over", pfWidth/2, 225);
-		c.font = "normal 18px sans-serif";
-		c.fillText("click here to reset", pfWidth/2, 275);					
+	unbindGameplayHandlers();
+			
+	var eScore = parseFloat($('#eScore').text());
+	var wScore = parseFloat($('#wScore').text());
+	var winner;
+	if (eScore > wScore) {
+		winner = "blue";
 	}
-	else { 
-		alert("Game over! Click OK to reset and play again.");
-		preReset();
+	else if (wScore > eScore) {
+		winner = "black";
 	}
-}
+	else {
+		winner = "nobody";
+	}
+	
+	$('#mask').removeClass('offscreen');
+	$('#victor').text(winner + ' wins!').fadeIn('slow');
+	$('#start').text('play again');
 
-function preReset() {
-	$('#start').click().text('play again!');
-	init();
 }
 
 function drawCaptureArea(bird) {
@@ -215,20 +211,12 @@ function drawBird(bird) {
 	var faceOffsetX;
 	var faceOffsetY;
 	switch(bird.id) {
-		case 'n':
-			faceOffsetX = -28;
-			faceOffsetY = 15;
-			break;
-		case 's':
-			faceOffsetX = -32;
-			faceOffsetY = -92;
-			break;
 		case 'e':
-			faceOffsetX = -90;
+			faceOffsetX = -120;
 			faceOffsetY = -25;
 			break;
 		case 'w':
-			faceOffsetX = 25;
+			faceOffsetX = 60;
 			faceOffsetY = -30;
 			break;
 		default:
@@ -270,33 +258,27 @@ function startDirectionRandomizer() {
 	return (num % 2 == 0) ? 1 : -1;
 }
 
-function bindPlayPauseControl() {
-	$(document).bind('keydown.playpause', function(e) {
-		if(e.keyCode == 32) {
-			e.preventDefault();
-			$('#start').click();
-		}
-	});
-}
-
 function startOrContinue() {
+	gameState = gameStates.isPlaying;
 	$('#mask').addClass('offscreen');
 	bindGameplayHandlers();
-	$(this).text('pause');
+	$('#start').text('pause');
 	intervalId = setInterval(draw, 25);
 	return intervalId;
+
 }
 
 function pausePlay() {
+	gameState = gameStates.isPaused;
 	$('#mask').removeClass('offscreen');
 	unbindGameplayHandlers();
-	$(this).text('continue');
 	clearInterval(intervalId);
+	$('#start').text('continue');
 }
 
 function init() {
 	
-	$(document).unbind('.gameover');
+	$('#victor').fadeOut('fast', function() { $(this).css({visibility:'visible'}); } );
 	
 	if(!document.createElement('canvas').getContext) 
 	{
@@ -376,16 +358,14 @@ function init() {
 		drawBird(birds[i]);
 	}
 	
-	$('#playfield b').text('0');
-	$('#hhb').unbind('click keydown');
-	$('#start').text('play').toggle(
-		startOrContinue, pausePlay
-	);
-	
+	$('#eScore, #wScore').text('0');
+	$('#victor').empty();	
 	$('#mask').removeClass('offscreen');
 	$('#start').focus();
 		
 	draw();
+	gameState = gameStates.isInitialized;
+
 }
 			
 function draw() {
@@ -414,7 +394,29 @@ function draw() {
   	
 }
 
+function bindPersistentControls() {
+	$(document).bind('keydown', function(e) {
+		if(e.keyCode == 32) { // space bar
+			e.preventDefault();
+			$('#start').click();
+		}
+	});
+	
+	$('#start').click(function() {
+		if (gameState == gameStates.isPlaying) {
+			pausePlay();
+		}
+		else if (gameState == gameStates.isOver) {
+			init();
+			startOrContinue();
+		}
+		else {
+			startOrContinue();
+		}	
+	});
+}
+
 $(window).load(function() {
 	init();
-	bindPlayPauseControl();
+	bindPersistentControls();
 });
