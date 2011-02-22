@@ -301,7 +301,7 @@ function init() {
 	c.clearRect(0, 0, pfWidth, pfHeight);
 	s.clearRect(0, 0, pfWidth, pfHeight);
 	r.clearRect(0, 0, pfWidth, pfHeight);
-				
+					
 	// generate pigs w/ randomized start position, imgSrc, and x/y velocity
 	for(i=0; i<pigCount; i++) {
 		
@@ -428,7 +428,12 @@ function bindPersistentControls() {
 	});
 }
 
+function addLogoToPlayfield() {
+	var clonedLogo = $('#logo').clone().attr('id', 'playfieldLogo').insertAfter('#static').css({'opacity':'0.3'});
+}
+
 $(window).load(function() {
 	init();
 	bindPersistentControls();
+	addLogoToPlayfield();
 });
