@@ -55,6 +55,8 @@ function Bird(x, y, color, axis, direction, id, imgSrc, captureX, captureY) {
 	this.range = 150;
 	this.captureRadius = 125;
 	this.radius = 150;
+	this.defaultRadius = this.radius;
+	this.maxRadius = 225;
 	this.launched = false;
 	this.x = x;
 	this.y = y;
@@ -70,17 +72,22 @@ function Bird(x, y, color, axis, direction, id, imgSrc, captureX, captureY) {
 	this.face.src = imgSrc;
 	this.scoreSelector = '#' + this.id + 'Score';
 	this.startPoint = (this.axis == 'x') ? this.startX : this.startY;
+	this.endPoint = this.startPoint + (this.range * this.direction);
+	this.midPoint = this.startPoint + ((this.range/2) * this.direction);
 	this.launch = function() {
 		var self = this;
 		self.launched = true;
-		var from = { anim: this.startPoint };
-		var to = { anim:  this.startPoint + (this.range * this.direction)  };
-		
+		var from = { anim: self.startPoint };
+		var to = { anim:  self.endPoint  };
 		$(from).animate(to, { 
 			duration: 125,
 			step: function() {
 				if (self.axis == 'x') self.x = this.anim;
 				else self.y = this.anim;
+				
+				if (self.radius < self.maxRadius) self.radius += 5;
+				else self.radius -= 5;
+				
 			},
 			complete: function() {
 				self.capture();
@@ -90,8 +97,9 @@ function Bird(x, y, color, axis, direction, id, imgSrc, captureX, captureY) {
 	},
 	this.retreat = function() {
 		var self = this;
-		var from = { anim: this.startPoint + (this.range * this.direction) };
-		var to = { anim:  this.startPoint };
+		self.radius = self.defaultRadius;
+		var from = { anim: self.endPoint };
+		var to = { anim:  self.startPoint };
 		$(from).animate(to, { 
 			duration: 275,
 			step: function() {
