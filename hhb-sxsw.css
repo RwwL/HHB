@@ -89,9 +89,8 @@ h1 {
 #victor {
 	visibility: hidden;
 	text-align: center;
-	width: 300px;
+	width: auto;
 	left: 50%;
-	margin-left: -174px;
 }
 
 #mask {

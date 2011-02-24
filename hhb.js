@@ -4,7 +4,7 @@ var intervalId = 0;
 var pfWidth = 1024;
 var pfHeight = 768;
 var firstDraw = true;
-var pigCount = 50;
+var pigCount = 100;
 var pigs = [];
 var capturedPigs = [];
 var birdCount = 2;
@@ -120,16 +120,16 @@ function Bird(x, y, color, axis, direction, id, imgSrc, captureX, captureY, repo
 	this.capture = function() {
 		
 		var r = this.reportContext;
-		
+
 		for(i=0; i<pigCount; i++) {
 			
 			if (pigs[i].inPlay == false) continue;
 
 			// prepare to map pigs on report canvas
 			r.font = 'bold 10px/14px sans-serif';
-			r.fillStyle = "red";
-			r.textAlign = "center";
-			r.textBaseline = "middle";
+			r.fillStyle = 'red';
+			r.textAlign = 'center';
+			r.textBaseline = 'middle';
 
 			if ( inCaptureArea(this.captureX, this.captureY, this.captureRadius, pigs[i].centerX, pigs[i].centerY) ) {
 				
@@ -150,6 +150,21 @@ function inCaptureArea(centerX, centerY, cRadius, pointX, pointY) {
 	return squareDistance < square(cRadius);
 }
 
+function victoryMessage(winner, loser) {
+	var messages = [
+			winner + ' is victorious!',
+			'and the winner is... ' + winner + '!',
+			winner + ' takes it all!',
+			winner + ' tastes of win and God',
+			'all ' + loser +'\'s base are belong to ' + winner ,
+			'sorry, ' + loser + '... you got served',
+			'awwww snap! ' + winner + ' schooled you, ' + loser
+			
+	];
+	var index = Math.floor( Math.random()* messages.length);
+	return messages[index];
+}
+
 
 function gameOver() {
 	
@@ -161,19 +176,21 @@ function gameOver() {
 			
 	var eScore = parseFloat($('#eScore').text());
 	var wScore = parseFloat($('#wScore').text());
-	var winner;
+	var message;
 	if (eScore > wScore) {
-		winner = "blue";
+		message = victoryMessage('blue', 'black');
 	}
 	else if (wScore > eScore) {
-		winner = "black";
+		message = victoryMessage('black', 'blue');
 	}
 	else {
-		winner = "nobody";
+		message = 'it\s a tie! REMATCH!';
 	}
 	
 	$('#mask').removeClass('offscreen');
-	$('#victor').text(winner + ' wins!').fadeIn('slow');
+	$('#victor').text(message);
+	var victorOffset = $('#victor').outerWidth() / 2;
+	$('#victor').css({marginLeft : (-1 * victorOffset)}).fadeIn('slow');
 	$('#start').text('play again');
 
 }
@@ -302,13 +319,11 @@ function init() {
 	capturedPigs = [];
 	
 	birdCanvas = document.getElementById('hhb').getContext('2d');
-/*
+
 	birdCanvas.shadowColor = '#444444';
 	birdCanvas.shadowOffsetY = 2;
 	birdCanvas.shadowBlur = 8;	
-*/
-	
-	
+
 	pigCanvas = document.getElementById('pigs').getContext('2d');
 	birdFacesCanvas = document.getElementById('birdFaces').getContext('2d');
 	staticCanvas = document.getElementById('static').getContext('2d');
@@ -375,7 +390,6 @@ function init() {
 			else {
 				pigs[i].yVel = (pigs[i].yVel > 0) ? pigs[i].yVel + deficit : pigs[i].yVel - deficit; 
 			}
-
 			//console.log('final total velocity:'+ (Math.abs(pigs[i].xVel) + Math.abs(pigs[i].yVel)) );	
 		}
 		
@@ -434,8 +448,8 @@ function draw() {
 function nudgeBoard() {
 	for(i=0; i<pigCount; i++) {
 		if (pigs[i].inPlay) {
-			pigs[i].xVel += (Math.floor(Math.random()*4) + 3);
-			pigs[i].yVel -= (Math.floor(Math.random()*4) + 3);
+			pigs[i].xVel += (Math.floor(Math.random()*20) + 15);
+			pigs[i].yVel -= (Math.floor(Math.random()*20) + 15);
 		}
 	}
 }
