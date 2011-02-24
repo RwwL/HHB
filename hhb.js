@@ -363,9 +363,11 @@ function init() {
 		switch(pigs[i].imgNum) {
 			case 1:
 				pigs[i].pigImg.src = pigImgs.pig1;
+				pigs[i].pointVal = 50;
 				break;
 			case 2:
 				pigs[i].pigImg.src = pigImgs.pig2;
+				pigs[i].pointVal = 40;
 				break;
 			case 3:
 				pigs[i].pigImg.src = pigImgs.pig3;
@@ -375,6 +377,7 @@ function init() {
 				break;
 			case 5:
 				pigs[i].pigImg.src = pigImgs.pig5;
+				pigs[i].pointVal = 20;
 				break;
 			case 6:
 				pigs[i].pigImg.src = pigImgs.pig6;
@@ -382,6 +385,7 @@ function init() {
 			default:
 				break;
 		}
+		
 		pigs[i].width = pigs[i].pigImg.width;
 		pigs[i].height = pigs[i].pigImg.height;
 		
