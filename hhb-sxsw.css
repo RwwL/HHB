@@ -64,7 +64,7 @@ h1 {
 	background: #e0e0e0; /* TODO make this white once circular playfield is set up */
 }
 
-#wrap > b {
+b.feedback {
 	position: absolute;
 	top: 20px;
 	background: rgba(0,0,0, .25);
@@ -91,6 +91,10 @@ h1 {
 	text-align: center;
 	width: auto;
 	left: 50%;
+	font-size: 24px;
+	top: 28px;
+	padding: 10px 16px 12px;
+	font-weight: normal;
 }
 
 #mask {

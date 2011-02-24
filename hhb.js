@@ -157,8 +157,10 @@ function victoryMessage(winner, loser) {
 			winner + ' takes it all!',
 			winner + ' tastes of win and God',
 			'all ' + loser +'\'s base are belong to ' + winner ,
-			'sorry, ' + loser + '... you got served',
-			'awwww snap! ' + winner + ' schooled you, ' + loser
+			'sorry, ' + loser + ', you got served',
+			'awwww snap! ' + winner + ' schooled you, ' + loser,
+			winner + ": thrill of victory " + loser + ": agony of defeat.",
+			'epic win:' + winner + '. epic fail: ' + loser 
 			
 	];
 	var index = Math.floor( Math.random()* messages.length);
