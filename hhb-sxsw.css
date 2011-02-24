@@ -53,7 +53,7 @@ h1 {
 	right: 25px;
 }
 
-#hhb, #static {
+#hhb, #pigs, #static, #birdFaces, #eastReport, #westReport {
 	position: absolute;
 	background: transparent; 
 	display: block;
@@ -166,12 +166,4 @@ p {
 
 #start:focus {
 	outline: none;
-}
-
-#report {
-	border: solid 1px lime;
-	position: absolute;
-	top: 75px;
-	left: 900px;
-	display: none; /* remove for debugging view canvas */
 }

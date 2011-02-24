@@ -1,10 +1,10 @@
-var c, s, r, eastBird, westBird;
+var birdCanvas, birdFacesCanvas, pigCanvas, staticCanvas, eastReport, westReport, eastBird, westBird;
 var ballRadius = 10;
 var intervalId = 0;
 var pfWidth = 1024;
 var pfHeight = 768;
 var firstDraw = true;
-var pigCount = 99;
+var pigCount = 50;
 var pigs = [];
 var capturedPigs = [];
 var birdCount = 2;
@@ -48,9 +48,10 @@ function Pig(x, y, imgNum, xVel, yVel) {
 	this.height = 0;
 	this.centerX;
 	this.centerY;
+	this.pointVal = 10;
 }
 
-function Bird(x, y, color, axis, direction, id, imgSrc, captureX, captureY) {
+function Bird(x, y, color, axis, direction, id, imgSrc, captureX, captureY, reportContext) {
 	this.score = 0;
 	this.range = 150;
 	this.captureRadius = 125;
@@ -74,6 +75,7 @@ function Bird(x, y, color, axis, direction, id, imgSrc, captureX, captureY) {
 	this.startPoint = (this.axis == 'x') ? this.startX : this.startY;
 	this.endPoint = this.startPoint + (this.range * this.direction);
 	this.midPoint = this.startPoint + ((this.range/2) * this.direction);
+	this.reportContext = reportContext;
 	this.launch = function() {
 		var self = this;
 		self.launched = true;
@@ -85,8 +87,8 @@ function Bird(x, y, color, axis, direction, id, imgSrc, captureX, captureY) {
 				if (self.axis == 'x') self.x = this.anim;
 				else self.y = this.anim;
 				
-				if (self.radius < self.maxRadius) self.radius += 5;
-				else self.radius -= 5;
+				if (self.radius < self.maxRadius) self.radius += 7;
+				else self.radius -= 7;
 				
 			},
 			complete: function() {
@@ -109,38 +111,32 @@ function Bird(x, y, color, axis, direction, id, imgSrc, captureX, captureY) {
 			complete: function() {
 				(self.axis == 'x') ? self.x = self.startPoint : self.y = self.startPoint;
 				self.launched = false;
+				self.reportContext.clearRect(0,0,pfWidth,pfHeight);
+				
 			}
 		});
 	}
 	this.capture = function() {
 		
-		// draw capture area on test canvas
-		/*
-		r.clearRect(0, 0, 500, 500);
-		r.fillStyle = '#ffffff';
-		r.beginPath();	
-	 	r.arc(this.captureX, this.captureY, this.captureRadius, 0, Math.PI*2, false);
-		r.closePath();
-		r.fill();
-		*/	
-
+		var r = this.reportContext;
+		
 		for(i=0; i<pigCount; i++) {
 			
 			if (pigs[i].inPlay == false) continue;
 
-			// map all the pigs at moment of capture in red on test canvas
-/*
-			r.fillStyle = 'rgb(255,0,0)';
-			r.beginPath();
-				r.arc(pigs[i].centerX, pigs[i].centerY, 10, 0, Math.PI*2, false);
-			r.closePath();
-			r.fill();
-*/
+			// prepare to map pigs on report canvas
+			r.fillStyle = 'red';
 
 			if ( inCaptureArea(this.captureX, this.captureY, this.captureRadius, pigs[i].centerX, pigs[i].centerY) ) {
+				
+				r.beginPath();
+				r.arc(pigs[i].centerX, pigs[i].centerY, 6, 0, Math.PI*2, false);
+				r.closePath();
+				r.fill();
+				
 				pigs[i].inPlay = false;
 				capturedPigs.push(pigs[i]);
-				this.score++;
+				this.score += pigs[i].pointVal;
 				$(this.scoreSelector).text(this.score);
 				if (capturedPigs.length == pigCount) gameOver();
 			}
@@ -157,6 +153,8 @@ function inCaptureArea(centerX, centerY, cRadius, pointX, pointY) {
 function gameOver() {
 	
 	gameState = gameStates.isOver;
+	eastReport.clearRect(0,0,pfWidth,pfHeight);
+	westReport.clearRect(0,0,pfWidth,pfHeight);
 	clearInterval(intervalId);
 	unbindGameplayHandlers();
 			
@@ -181,40 +179,35 @@ function gameOver() {
 
 function drawCaptureArea(bird) {
 
-	s.fillStyle = 'rgba(255,255,255, 0.8)';
-	s.beginPath();	
- 	s.arc(bird.captureX, bird.captureY, bird.captureRadius, 0, Math.PI*2, false);
-	s.closePath();
-	s.fill();
-	
-	r.fillStyle = '#fff';
-	r.beginPath();	
- 	r.arc(bird.captureX, bird.captureY, bird.captureRadius, 0, Math.PI*2, false);
-	r.closePath();
-	r.fill();
+	staticCanvas.fillStyle = 'rgba(255,255,255, 0.8)';
+	staticCanvas.beginPath();	
+ 	staticCanvas.arc(bird.captureX, bird.captureY, bird.captureRadius, 0, Math.PI*2, false);
+	staticCanvas.closePath();
+	staticCanvas.fill();
 	
 }
 
-function drawPig(pig) {	
+function drawPig(pig) {
+	if (!pig.inPlay) return;
 	if (pig.x + pig.xVel < 0 || pig.x + pig.xVel + pig.width > pfWidth ) {
 		pig.xVel = -pig.xVel
 	}
 	if (pig.y + pig.yVel < 0 || pig.y + pig.yVel + pig.height > pfHeight ) {
 		pig.yVel = -pig.yVel
 	}					
-		c.drawImage(pig.pigImg, pig.x += pig.xVel, pig.y += pig.yVel );
+		pigCanvas.drawImage(pig.pigImg, pig.x += pig.xVel, pig.y += pig.yVel );
 }
 
 function drawBird(bird) {
-	c.fillStyle = bird.color;
-	c.beginPath();
-	c.arc(bird.x, bird.y, bird.radius, 0, Math.PI*2, false);
+	birdCanvas.fillStyle = bird.color;
+	birdCanvas.beginPath();
+	birdCanvas.arc(bird.x, bird.y, bird.radius, 0, Math.PI*2, false);
 	if (bird.id == 'n') {
-		c.strokeStyle = '#444444';
-		c.stroke();	
+		birdCanvas.strokeStyle = '#444444';
+		birdCanvas.stroke();	
 	}
-	c.closePath();
-	c.fill();
+	birdCanvas.closePath();
+	birdCanvas.fill();
 
 	var faceOffsetX;
 	var faceOffsetY;
@@ -232,7 +225,7 @@ function drawBird(bird) {
 			break;
   }
  			  
-  c.drawImage(bird.face, bird.x + faceOffsetX, bird.y + faceOffsetY);
+  birdFacesCanvas.drawImage(bird.face, bird.x + faceOffsetX, bird.y + faceOffsetY);
   
 }
 
@@ -274,7 +267,7 @@ function startOrContinue() {
 	$('#mask').addClass('offscreen');
 	bindGameplayHandlers();
 	$('#start').text('pause');
-	intervalId = setInterval(draw, 25);
+	intervalId = setInterval(draw, 20);
 	return intervalId;
 
 }
@@ -302,13 +295,26 @@ function init() {
 	birds = [];
 	capturedPigs = [];
 	
-	c = document.getElementById('hhb').getContext('2d');  
-	s = document.getElementById('static').getContext('2d');
-	r = document.getElementById('report').getContext('2d');
+	birdCanvas = document.getElementById('hhb').getContext('2d');
+/*
+	birdCanvas.shadowColor = '#444444';
+	birdCanvas.shadowOffsetY = 2;
+	birdCanvas.shadowBlur = 8;	
+*/
 	
-	c.clearRect(0, 0, pfWidth, pfHeight);
-	s.clearRect(0, 0, pfWidth, pfHeight);
-	r.clearRect(0, 0, pfWidth, pfHeight);
+	
+	pigCanvas = document.getElementById('pigs').getContext('2d');
+	birdFacesCanvas = document.getElementById('birdFaces').getContext('2d');
+	staticCanvas = document.getElementById('static').getContext('2d');
+	eastReport = document.getElementById('eastReport').getContext('2d');
+	westReport = document.getElementById('westReport').getContext('2d');
+	
+	birdCanvas.clearRect(0, 0, pfWidth, pfHeight);
+	pigCanvas.clearRect(0, 0, pfWidth, pfHeight);
+	birdFacesCanvas.clearRect(0, 0, pfWidth, pfHeight);
+	eastReport.clearRect(0, 0, pfWidth, pfHeight);
+	westReport.clearRect(0, 0, pfWidth, pfHeight);
+	staticCanvas.clearRect(0, 0, pfWidth, pfHeight);
 					
 	// generate pigs w/ randomized start position, imgSrc, and x/y velocity
 	for(i=0; i<pigCount; i++) {
@@ -357,8 +363,8 @@ function init() {
 		
 	}
 	
-	eastBird 	= new Bird( pfWidth, pfHeight/2, '#64acc8', 'x', -1, 'e', birdImgs.blueBird,  pfWidth-captureOffset, pfHeight/2 );
-	westBird 	= new Bird(   0, pfHeight/2, '#000000', 'x',  1, 'w', birdImgs.blackBird, captureOffset, pfHeight/2 );
+	eastBird 	= new Bird( pfWidth, pfHeight/2, '#64acc8', 'x', -1, 'e', birdImgs.blueBird,  pfWidth-captureOffset, pfHeight/2, eastReport );
+	westBird 	= new Bird(   0, pfHeight/2, '#000000', 'x',  1, 'w', birdImgs.blackBird, captureOffset, pfHeight/2, westReport );
 	
 	birds = [ eastBird, westBird ];
 
@@ -381,7 +387,9 @@ function init() {
 			
 function draw() {
 
- 	c.clearRect(0, 0, 1024, 768);
+	birdCanvas.clearRect(0, 0, pfWidth, pfHeight);
+	pigCanvas.clearRect(0, 0, pfWidth, pfHeight);
+	birdFacesCanvas.clearRect(0, 0, pfWidth, pfHeight);
 	
 	for(i=0; i<pigCount; i++)
 	{
