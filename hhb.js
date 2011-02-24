@@ -167,7 +167,7 @@ function victoryMessage(winner, loser) {
 			'sorry, ' + loser + ', you got served, yo',
 			'awwww snap! ' + winner + ' schooled you, ' + loser,
 			winner + ": thrill of victory " + loser + ": agony of defeat.",
-			'epic win:' + winner + '. epic fail: ' + loser 
+			'epic win: ' + winner + '. epic fail: ' + loser 
 			
 	];
 	var index = Math.floor( Math.random()* messages.length);
