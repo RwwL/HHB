@@ -1,7 +1,7 @@
 body, html {
 	margin: 0;
 	padding: 0;
-	background: #2a8975; /* rgb(42,137,117) */
+	background: #2a8975; /* aka rgb(42,137,117), angry birds teal. angry birds yellow = #ffd308 */
 	color: white;				
 	font-size: 18px;
 	line-height: 24px;
@@ -12,6 +12,27 @@ body, html {
 	width: 1024px;
 	height: 768px;
 	position: absolute;
+}
+
+b.score {
+	font-family: 'Courier New', monospace;
+	font-size: 14px;
+	font-weight: bold;
+	letter-spacing: -1px;
+	color: #bf0000;
+	text-shadow: 1px 1px white;
+	-webkit-transition-property: -webkit-transform, scale, opacity;
+	-webkit-transition-duration: 750ms;
+	-webkit-transition-delay: 0;
+	position: absolute;
+	top: 0;
+	left: 0;
+	margin: -6px 0 0 -4px;
+}
+
+b.score.transition {
+	opacity: 0;
+	-webkit-transform: scale(2) translateY(-30px);
 }
 
 a {

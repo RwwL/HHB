@@ -36,6 +36,21 @@ function square(a) {
 	return a * a;
 }
 
+function showCapture(x, y, pointVal) {
+
+	var $score = $('<b class="score">' + pointVal + '</b>');
+	$score.css(
+		{
+			left: x,
+			top: y
+		}
+	);
+	$score.appendTo('body').bind('webkitTransitionEnd', function(e) {
+		$(e.srcElement).remove();
+	});
+	setTimeout( function() { $score.addClass('transition') }, 0); // setTimeout makes sure it's rendered onscreen before adding the class... required to kick off transitions
+}
+
 function Pig(x, y, imgNum, xVel, yVel) {
 	this.x	= x;
 	this.y	= y;				
@@ -125,16 +140,8 @@ function Bird(x, y, color, axis, direction, id, imgSrc, captureX, captureY, repo
 			
 			if (pigs[i].inPlay == false) continue;
 
-			// prepare to map pigs on report canvas
-			r.font = 'bold 10px/14px sans-serif';
-			r.fillStyle = 'red';
-			r.textAlign = 'center';
-			r.textBaseline = 'middle';
-
 			if ( inCaptureArea(this.captureX, this.captureY, this.captureRadius, pigs[i].centerX, pigs[i].centerY) ) {
-				
-				r.fillText(pigs[i].pointVal, pigs[i].centerX, pigs[i].centerY);
-				
+				showCapture(pigs[i].centerX, pigs[i].centerY, pigs[i].pointVal);
 				pigs[i].inPlay = false;
 				capturedPigs.push(pigs[i]);
 				this.score += pigs[i].pointVal;
@@ -157,7 +164,7 @@ function victoryMessage(winner, loser) {
 			winner + ' takes it all!',
 			winner + ' tastes of win and God',
 			'all ' + loser +'\'s base are belong to ' + winner ,
-			'sorry, ' + loser + ', you got served',
+			'sorry, ' + loser + ', you got served, yo',
 			'awwww snap! ' + winner + ' schooled you, ' + loser,
 			winner + ": thrill of victory " + loser + ": agony of defeat.",
 			'epic win:' + winner + '. epic fail: ' + loser 
@@ -450,8 +457,8 @@ function draw() {
 function nudgeBoard() {
 	for(i=0; i<pigCount; i++) {
 		if (pigs[i].inPlay) {
-			pigs[i].xVel += (Math.floor(Math.random()*20) + 15);
-			pigs[i].yVel -= (Math.floor(Math.random()*20) + 15);
+			pigs[i].xVel = 	pigVelocityRandomizer();
+			pigs[i].yVel =	pigVelocityRandomizer();
 		}
 	}
 }
