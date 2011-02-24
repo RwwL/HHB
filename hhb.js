@@ -13,6 +13,7 @@ var captureOffset = 150;
 var pigStartRadius = 250;
 var pigStartXOffset = (pfWidth - pigStartRadius) / 2;
 var pigStartYOffset = (pfHeight - pigStartRadius) / 2;
+var velocityThreshold = 20;
 var gameState;
 var gameStates = {
 	isInitialized: 0,
@@ -125,14 +126,14 @@ function Bird(x, y, color, axis, direction, id, imgSrc, captureX, captureY, repo
 			if (pigs[i].inPlay == false) continue;
 
 			// prepare to map pigs on report canvas
-			r.fillStyle = 'red';
+			r.font = 'bold 10px/14px sans-serif';
+			r.fillStyle = "red";
+			r.textAlign = "center";
+			r.textBaseline = "middle";
 
 			if ( inCaptureArea(this.captureX, this.captureY, this.captureRadius, pigs[i].centerX, pigs[i].centerY) ) {
 				
-				r.beginPath();
-				r.arc(pigs[i].centerX, pigs[i].centerY, 6, 0, Math.PI*2, false);
-				r.closePath();
-				r.fill();
+				r.fillText(pigs[i].pointVal, pigs[i].centerX, pigs[i].centerY);
 				
 				pigs[i].inPlay = false;
 				capturedPigs.push(pigs[i]);
@@ -262,6 +263,11 @@ function startDirectionRandomizer() {
 	return (num % 2 == 0) ? 1 : -1;
 }
 
+function pigVelocityRandomizer() {
+	var num = Math.ceil(Math.random()*25) * startDirectionRandomizer();
+	return num ;
+}
+
 function startOrContinue() {
 	gameState = gameStates.isPlaying;
 	$('#mask').addClass('offscreen');
@@ -318,13 +324,13 @@ function init() {
 					
 	// generate pigs w/ randomized start position, imgSrc, and x/y velocity
 	for(i=0; i<pigCount; i++) {
-		
+
 		pigs.push( new Pig(
 					Math.floor(Math.random()*pigStartRadius) + pigStartXOffset, // start X
 					Math.floor(Math.random()*pigStartRadius) + pigStartYOffset, // start Y
 					Math.floor(Math.random()*6) +  1, 	 // randomize the imgNum 
-					(Math.ceil(Math.random()*15)) * startDirectionRandomizer(),	// xVel
-					(Math.ceil(Math.random()*15)) * startDirectionRandomizer() 	// yVel
+					pigVelocityRandomizer(), // xVel
+					pigVelocityRandomizer() // yVel
 				)
 			);						
 	}
@@ -356,9 +362,21 @@ function init() {
 		pigs[i].height = pigs[i].pigImg.height;
 		
 		//make sure there aren't any pigs that are too slow
-		if (pigs[i].xVel < 2 && pigs[i].yVel < 2) {
-			var prop = (startDirectionRandomizer() == 1) ? pigs[i].xVel : pigs[i].yVel;
-		 	prop = Math.floor(Math.random()*5) + 5;
+		var totalVelocity = Math.abs(pigs[i].xVel) + Math.abs(pigs[i].yVel);
+		
+		if (totalVelocity < velocityThreshold ) {
+			
+			var deficit = velocityThreshold - totalVelocity;  
+					
+			var switcher = startDirectionRandomizer();
+			if (switcher > 0) {
+				pigs[i].xVel = (pigs[i].xVel > 0) ? pigs[i].xVel + deficit : pigs[i].xVel - deficit;
+			}
+			else {
+				pigs[i].yVel = (pigs[i].yVel > 0) ? pigs[i].yVel + deficit : pigs[i].yVel - deficit; 
+			}
+
+			//console.log('final total velocity:'+ (Math.abs(pigs[i].xVel) + Math.abs(pigs[i].yVel)) );	
 		}
 		
 	}
