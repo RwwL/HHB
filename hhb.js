@@ -4,7 +4,7 @@ var intervalId = 0;
 var pfWidth = 1024;
 var pfHeight = 768;
 var firstDraw = true;
-var pigCount = 100;
+var pigCount = 1;
 var pigs = [];
 var capturedPigs = [];
 var birdCount = 2;
@@ -159,15 +159,15 @@ function inCaptureArea(centerX, centerY, cRadius, pointX, pointY) {
 
 function victoryMessage(winner, loser) {
 	var messages = [
-			winner + ' is victorious!',
-			'and the winner is... ' + winner + '!',
-			winner + ' takes it all!',
-			winner + ' tastes of win and God',
-			'all ' + loser +'\'s base are belong to ' + winner ,
-			'sorry, ' + loser + ', you got served, yo',
-			'awwww snap! ' + winner + ' schooled you, ' + loser,
-			winner + ": thrill of victory " + loser + ": agony of defeat.",
-			'epic win: ' + winner + '. epic fail: ' + loser 
+			'<b>' + winner + '</b> is victorious!',
+			'and the winner is... <b>' + winner + '</b>!',
+			'<b>' + winner + '</b> takes it all!',
+			'<b>' + winner + '</b> tastes of win and God',
+			'all <b>' + loser + '</b>\'s base are belong to <b>' + winner + '</b>',
+			'sorry, <b>' + loser + '</b>, you got served, yo',
+			'awwww snap! <b>' + winner + '</b> schooled you, <b>' + loser + '</b>',
+			'<b>' + winner + "</b>: thrill of victory! &nbsp;★&nbsp; <b>" + loser + "</b>: agony of defeat.",
+			'epic win: <b>' + winner + '</b> &nbsp;★&nbsp; epic fail: <b>' + loser + '</b>'
 			
 	];
 	var index = Math.floor( Math.random()* messages.length);
@@ -197,7 +197,7 @@ function gameOver() {
 	}
 	
 	$('#mask').removeClass('offscreen');
-	$('#victor').text(message);
+	$('#victor').html(message);
 	var victorOffset = $('#victor').outerWidth() / 2;
 	$('#victor').css({marginLeft : (-1 * victorOffset)}).fadeIn('slow');
 	$('#start').text('play again');
