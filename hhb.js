@@ -300,6 +300,12 @@ function startOrContinue() {
 	bindGameplayHandlers();
 	$('#start').text('pause');
 	intervalId = setInterval(draw, 20);
+	
+	// send a random keydown to the playfield to make sure it's focused to get events from Kinect
+	var e = jQuery.Event("keydown");
+	e.which = 84;
+	$(document).trigger(e)
+	
 	return intervalId;
 
 }
