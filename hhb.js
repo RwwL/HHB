@@ -13,7 +13,7 @@ var captureOffset = 150;
 var pigStartRadius = 250;
 var pigStartXOffset = (pfWidth - pigStartRadius) / 2;
 var pigStartYOffset = (pfHeight - pigStartRadius) / 2;
-var velocityThreshold = 20;
+var velocityThreshold = 25;
 var gameState;
 var gameStates = {
 	isInitialized: 0,
@@ -51,12 +51,12 @@ function showCapture(x, y, pointVal) {
 	setTimeout( function() { $score.addClass('transition') }, 0); // setTimeout makes sure it's rendered onscreen before adding the class... required to kick off transitions
 }
 
-function Pig(x, y, imgNum, xVel, yVel) {
+function Pig(x, y, imgNum) {
 	this.x	= x;
 	this.y	= y;				
 	this.imgNum	= imgNum;
-	this.xVel = xVel;
-	this.yVel = yVel;
+	this.xVel = 0;
+	this.yVel = 0;
 	this.pigImg = new Image();
 	this.pigImg.src = pigImgs.pig1;
 	this.inPlay = true;
@@ -273,7 +273,7 @@ function bindGameplayHandlers() {
 				break;
 			case 13: // enter
 				e.preventDefault();
-				nudgeBoard();			
+				setPigSpeedsAndDirections();			
 			default:
 				break;
 		}
@@ -291,7 +291,7 @@ function startDirectionRandomizer() {
 
 function pigVelocityRandomizer() {
 	var num = Math.ceil(Math.random()*25) * startDirectionRandomizer();
-	return num ;
+	return num;
 }
 
 function startOrContinue() {
@@ -299,7 +299,7 @@ function startOrContinue() {
 	$('#mask').addClass('offscreen');
 	bindGameplayHandlers();
 	$('#start').text('pause');
-	intervalId = setInterval(draw, 20);
+	intervalId = setInterval(draw, 25);
 	
 	// send a random keydown to the playfield to make sure it's focused to get events from Kinect
 	var e = jQuery.Event("keydown");
@@ -316,6 +316,35 @@ function pausePlay() {
 	unbindGameplayHandlers();
 	clearInterval(intervalId);
 	$('#start').text('continue');
+}
+
+function setPigSpeedsAndDirections() {
+
+	// to make sure there aren't any pigs that are too slow but keep a nice variety of directions
+	
+	for(i=0; i<pigCount; i++) {
+
+		if (!(pigs[i].inPlay)) continue;
+		
+		pigs[i].xVel = pigVelocityRandomizer();
+		pigs[i].yVel = pigVelocityRandomizer();
+				
+		var totalVelocity = Math.abs(pigs[i].xVel) + Math.abs(pigs[i].yVel);
+		
+		if (totalVelocity < velocityThreshold ) {
+			
+			var deficit = velocityThreshold - totalVelocity;  
+					
+			var switcher = startDirectionRandomizer();
+			if (switcher > 0) {
+				pigs[i].xVel = (pigs[i].xVel > 0) ? pigs[i].xVel + deficit : pigs[i].xVel - deficit;
+			}
+			else {
+				pigs[i].yVel = (pigs[i].yVel > 0) ? pigs[i].yVel + deficit : pigs[i].yVel - deficit; 
+			}
+			//console.log('final total velocity:'+ (Math.abs(pigs[i].xVel) + Math.abs(pigs[i].yVel)) );	
+		}
+	}
 }
 
 function init() {
@@ -352,20 +381,16 @@ function init() {
 	westReport.clearRect(0, 0, pfWidth, pfHeight);
 	staticCanvas.clearRect(0, 0, pfWidth, pfHeight);
 					
-	// generate pigs w/ randomized start position, imgSrc, and x/y velocity
+	// generate pigs w/ randomized start position & imgNum
 	for(i=0; i<pigCount; i++) {
 
 		pigs.push( new Pig(
 					Math.floor(Math.random()*pigStartRadius) + pigStartXOffset, // start X
 					Math.floor(Math.random()*pigStartRadius) + pigStartYOffset, // start Y
-					Math.floor(Math.random()*6) +  1, 	 // randomize the imgNum 
-					pigVelocityRandomizer(), // xVel
-					pigVelocityRandomizer() // yVel
-				)
+					Math.floor(Math.random()*6) +  1 // randomize the imgNum
+				)	  
 			);						
-	}
-
-	for(i=0; i<pigCount; i++) {
+	
 		switch(pigs[i].imgNum) {
 			case 1:
 				pigs[i].pigImg.src = pigImgs.pig1;
@@ -394,26 +419,11 @@ function init() {
 		
 		pigs[i].width = pigs[i].pigImg.width;
 		pigs[i].height = pigs[i].pigImg.height;
-		
-		//make sure there aren't any pigs that are too slow
-		var totalVelocity = Math.abs(pigs[i].xVel) + Math.abs(pigs[i].yVel);
-		
-		if (totalVelocity < velocityThreshold ) {
-			
-			var deficit = velocityThreshold - totalVelocity;  
-					
-			var switcher = startDirectionRandomizer();
-			if (switcher > 0) {
-				pigs[i].xVel = (pigs[i].xVel > 0) ? pigs[i].xVel + deficit : pigs[i].xVel - deficit;
-			}
-			else {
-				pigs[i].yVel = (pigs[i].yVel > 0) ? pigs[i].yVel + deficit : pigs[i].yVel - deficit; 
-			}
-			//console.log('final total velocity:'+ (Math.abs(pigs[i].xVel) + Math.abs(pigs[i].yVel)) );	
-		}
-		
 	}
 	
+	// reusable function to set or change pigs' xVel and yVel;
+	setPigSpeedsAndDirections();
+		
 	eastBird 	= new Bird( pfWidth, pfHeight/2, '#64acc8', 'x', -1, 'e', birdImgs.blueBird,  pfWidth-captureOffset, pfHeight/2, eastReport );
 	westBird 	= new Bird(   0, pfHeight/2, '#000000', 'x',  1, 'w', birdImgs.blackBird, captureOffset, pfHeight/2, westReport );
 	
@@ -464,14 +474,7 @@ function draw() {
   	
 }
 
-function nudgeBoard() {
-	for(i=0; i<pigCount; i++) {
-		if (pigs[i].inPlay) {
-			pigs[i].xVel = 	pigVelocityRandomizer();
-			pigs[i].yVel =	pigVelocityRandomizer();
-		}
-	}
-}
+
 
 function bindPersistentControls() {
 	$(document).bind('keydown', function(e) {
