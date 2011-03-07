@@ -45,7 +45,7 @@ function showCapture(x, y, pointVal) {
 			top: y
 		}
 	);
-	$score.appendTo('body').bind('webkitTransitionEnd', function(e) {
+	$score.appendTo('#wrap').bind('webkitTransitionEnd', function(e) {
 		$(e.srcElement).remove();
 	});
 	setTimeout( function() { $score.addClass('transition') }, 0); // setTimeout makes sure it's rendered onscreen before adding the class... required to kick off transitions
