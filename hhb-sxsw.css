@@ -29,6 +29,7 @@ b.score {
 	-webkit-transition-property: -webkit-transform, scale, opacity;
 	-webkit-transition-duration: 750ms;
 	-webkit-transition-delay: 0;
+	-webkit-transform: translateZ(0);
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -37,7 +38,7 @@ b.score {
 
 b.score.transition {
 	opacity: 0;
-	-webkit-transform: scale(2) translateY(-30px);
+	-webkit-transform: scale(2) translateY(-30px) translateZ(0);
 }
 
 a {

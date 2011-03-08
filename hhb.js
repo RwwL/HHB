@@ -4,7 +4,7 @@ var intervalId = 0;
 var pfWidth = 1024;
 var pfHeight = 768;
 var firstDraw = true;
-var pigCount = 100;
+var pigCount = 50;
 var pigs = [];
 var capturedPigs = [];
 var birdCount = 2;
@@ -13,7 +13,7 @@ var captureOffset = 150;
 var pigStartRadius = 250;
 var pigStartXOffset = (pfWidth - pigStartRadius) / 2;
 var pigStartYOffset = (pfHeight - pigStartRadius) / 2;
-var velocityThreshold = 25;
+var velocityThreshold = 24;
 var gameState;
 var gameStates = {
 	isInitialized: 0,
@@ -21,6 +21,7 @@ var gameStates = {
 	isPaused: 2,
 	isOver: 3
 }
+var fps = 30;
 
 // preload
 for(var prop in birdImgs) {
@@ -55,13 +56,12 @@ function Pig(x, y, imgNum) {
 	this.x	= x;
 	this.y	= y;				
 	this.imgNum	= imgNum;
-	this.xVel = 0;
-	this.yVel = 0;
+	this.xVel =	this.yVel = 0;
 	this.pigImg = new Image();
 	this.pigImg.src = pigImgs.pig1;
+	this.imgOffsetX = this.imgOffsetY = 0;
 	this.inPlay = true;
-	this.width = 0;
-	this.height = 0;
+	this.width = this.height = 0;
 	this.centerX;
 	this.centerY;
 	this.pointVal = 10;
@@ -77,6 +77,8 @@ function Bird(x, y, color, axis, direction, id, imgSrc, captureX, captureY, repo
 	this.launched = false;
 	this.x = x;
 	this.y = y;
+	this.faceOffsetX = 0;
+	this.faceOffsetY = 0;
 	this.startX = x;
 	this.startY = y;
 	this.captureX = captureX;
@@ -215,6 +217,7 @@ function drawCaptureArea(bird) {
 }
 
 function drawPig(pig) {
+
 	if (!pig.inPlay) return;
 	if (pig.x + pig.xVel < 0 || pig.x + pig.xVel + pig.width > pfWidth ) {
 		pig.xVel = -pig.xVel
@@ -222,38 +225,19 @@ function drawPig(pig) {
 	if (pig.y + pig.yVel < 0 || pig.y + pig.yVel + pig.height > pfHeight ) {
 		pig.yVel = -pig.yVel
 	}					
-		pigCanvas.drawImage(pig.pigImg, pig.x += pig.xVel, pig.y += pig.yVel );
+	pigCanvas.drawImage(pig.pigImg, pig.x += pig.xVel, pig.y += pig.yVel );
 }
 
 function drawBird(bird) {
+
 	birdCanvas.fillStyle = bird.color;
 	birdCanvas.beginPath();
 	birdCanvas.arc(bird.x, bird.y, bird.radius, 0, Math.PI*2, false);
-	if (bird.id == 'n') {
-		birdCanvas.strokeStyle = '#444444';
-		birdCanvas.stroke();	
-	}
 	birdCanvas.closePath();
 	birdCanvas.fill();
 
-	var faceOffsetX;
-	var faceOffsetY;
-	switch(bird.id) {
-		case 'e':
-			faceOffsetX = -130;
-			faceOffsetY = -25;
-			break;
-		case 'w':
-			faceOffsetX = 60;
-			faceOffsetY = -30;
-			break;
-		default:
-			faceOffsetX = faceOffsetY = 0;
-			break;
-  }
- 			  
-  birdFacesCanvas.drawImage(bird.face, bird.x + faceOffsetX, bird.y + faceOffsetY);
-  
+	birdFacesCanvas.drawImage(bird.face, bird.x + bird.faceOffsetX, bird.y + bird.faceOffsetY);
+
 }
 
 function bindGameplayHandlers() {
@@ -299,7 +283,7 @@ function startOrContinue() {
 	$('#mask').addClass('offscreen');
 	bindGameplayHandlers();
 	$('#start').text('pause');
-	intervalId = setInterval(draw, 25);
+	intervalId = setInterval(draw, 1000/fps);
 	
 	// send a random keydown to the playfield to make sure it's focused to get events from Kinect
 	var e = jQuery.Event("keydown");
@@ -364,7 +348,7 @@ function init() {
 	
 	birdCanvas = document.getElementById('hhb').getContext('2d');
 
-	birdCanvas.shadowColor = '#444444';
+	birdCanvas.shadowColor = '#555555';
 	birdCanvas.shadowOffsetY = 2;
 	birdCanvas.shadowBlur = 8;	
 
@@ -419,6 +403,9 @@ function init() {
 		
 		pigs[i].width = pigs[i].pigImg.width;
 		pigs[i].height = pigs[i].pigImg.height;
+		
+		pigs[i].imgOffsetX = pigs[i].width / 2;
+		pigs[i].imgOffsetY = pigs[i].height / 2; 
 	}
 	
 	// reusable function to set or change pigs' xVel and yVel;
@@ -433,6 +420,19 @@ function init() {
 	{
 		birds[i].score = 0;
 		drawCaptureArea(birds[i]);
+		switch(birds[i].id) {
+			case 'e':
+				birds[i].faceOffsetX = -130;
+				birds[i].faceOffsetY = -25;
+				break;
+			case 'w':
+				birds[i].faceOffsetX = 60;
+				birds[i].faceOffsetY = -30;
+				break;
+			default:
+				birds[i].faceOffsetX = birds[i].faceOffsetY = 0;
+				break;
+		}
 		drawBird(birds[i]);
 	}
 	
@@ -455,11 +455,10 @@ function draw() {
 	for(i=0; i<pigCount; i++)
 	{
 		if (pigs[i].inPlay == true) {
-			pigs[i].centerX = pigs[i].x + (pigs[i].width / 2);
-			pigs[i].centerY = pigs[i].y	 + (pigs[i].height / 2);
+			pigs[i].centerX = pigs[i].x + pigs[i].imgOffsetX;
+			pigs[i].centerY = pigs[i].y	 + pigs[i].imgOffsetY;
 			drawPig(pigs[i]);
 		} 
-
 	}
 	
 	for(i=0; i<birdCount; i++)
