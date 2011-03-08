@@ -13,7 +13,7 @@ var captureOffset = 150;
 var pigStartRadius = 250;
 var pigStartXOffset = (pfWidth - pigStartRadius) / 2;
 var pigStartYOffset = (pfHeight - pigStartRadius) / 2;
-var velocityThreshold = 24;
+var velocityThreshold = 28;
 var gameState;
 var gameStates = {
 	isInitialized: 0,
@@ -21,7 +21,7 @@ var gameStates = {
 	isPaused: 2,
 	isOver: 3
 }
-var fps = 30;
+var fps = 22;
 
 // preload
 for(var prop in birdImgs) {
@@ -274,7 +274,7 @@ function startDirectionRandomizer() {
 }
 
 function pigVelocityRandomizer() {
-	var num = Math.ceil(Math.random()*25) * startDirectionRandomizer();
+	var num = Math.ceil(Math.random()*35) * startDirectionRandomizer();
 	return num;
 }
 
