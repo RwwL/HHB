@@ -21,7 +21,7 @@ var gameStates = {
 	isPaused: 2,
 	isOver: 3
 }
-var fps = 22;
+var fps = 30;
 
 // preload
 for(var prop in birdImgs) {
@@ -285,9 +285,9 @@ function startOrContinue() {
 	$('#start').text('pause');
 	intervalId = setInterval(draw, 1000/fps);
 	
-	// send a random keydown to the playfield to make sure it's focused to get events from Kinect
-	var e = jQuery.Event("keydown");
-	e.which = 84;
+	// send a random keydown (t) to the playfield to make sure it's focused to get events from Kinect
+	var e = jQuery.Event('keydown');
+	e.keyCode = 84;
 	$(document).trigger(e)
 	
 	return intervalId;
