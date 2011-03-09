@@ -514,6 +514,29 @@ function addLogoToPlayfield() {
 	var clonedLogo = $('#logo').clone().attr('id', 'playfieldLogo').insertAfter('#static').css({'opacity':'0.3'});
 }
 
+// socket server connection for remote control
+// NOTE CONSTANTS.JS MUST CONTAIN NAME OR IP ADDRESS OF THE MACHINE RUNNING THE SOCKET SERVER
+$(document).ready(function(){
+
+	var client = new SocketClient(exports.CLIENT_TYPE_BOARD, exports.SOCKET_ADDRESS);
+	client.listen(function(msg){
+	    
+	    switch (msg.message) {
+	    	case 'startOrContinue':
+	    		$('#start').click();
+	    		break;
+	    	case 'redirectPigs':
+	    		setPigSpeedsAndDirections();
+	    		break;
+	    	default:
+	    		break;
+	    }
+	    
+	});
+	
+});
+
+// using window.load instead of document.ready to make sure all the external and dataURL images are loaded
 $(window).load(function() {
 	init();
 	bindPersistentControls();
