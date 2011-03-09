@@ -494,6 +494,14 @@ function bindPersistentControls() {
 			e.preventDefault();
 			$('#start').click();
 		}
+		if(e.keyCode == 77) { // m is for music
+			e.preventDefault();
+			$('#song').toggleClass('hidden');
+		}
+		if(e.keyCode == 80) {
+			e.preventDefault();
+			toggleMusicPlayback(); // p is for play/pause
+		}
 	});
 	
 	$('#start').click(function() {
@@ -514,6 +522,17 @@ function addLogoToPlayfield() {
 	var clonedLogo = $('#logo').clone().attr('id', 'playfieldLogo').insertAfter('#static').css({'opacity':'0.3'});
 }
 
+function toggleMusicPlayback() {
+	var song = $('#song')[0];
+	var paused = song.paused;
+	if (paused) {
+		song.play();
+	}
+	else {
+		song.pause();
+	}
+}
+
 // socket server connection for remote control
 // NOTE CONSTANTS.JS MUST CONTAIN NAME OR IP ADDRESS OF THE MACHINE RUNNING THE SOCKET SERVER
 $(document).ready(function(){
@@ -527,6 +546,9 @@ $(document).ready(function(){
 	    		break;
 	    	case 'redirectPigs':
 	    		setPigSpeedsAndDirections();
+	    		break;
+	    	case 'toggleMusic':
+	    		toggleMusicPlayback();
 	    		break;
 	    	default:
 	    		break;

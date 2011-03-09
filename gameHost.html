@@ -31,7 +31,11 @@
 				$('#host-button-b').bind(($.browser.mobile == true) ? "touchstart" : "mousedown", function(){		
 		            client.sendMessage(exports.PLAY_MADE_MSG, 'redirectPigs');
 		        });
-		
+
+				$('#host-button-c').bind(($.browser.mobile == true) ? "touchstart" : "mousedown", function(){		
+		            client.sendMessage(exports.PLAY_MADE_MSG, 'toggleMusic');
+		        });
+	
 			});
 		</script>		
 		<title>HHB: game host</title>  
@@ -42,8 +46,11 @@
 			<button id="host-button-a">
 				play/pause
 			</button>
+			<button id="host-button-c">
+				toggle music
+			</button>
 			<button id="host-button-b">
-				chaos!
+				nudge
 			</button>
 		</div>
 	</body>

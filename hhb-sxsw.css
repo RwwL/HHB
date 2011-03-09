@@ -206,11 +206,11 @@ button:focus {
 	width: 280px;
 	color: #333;
 	text-align: center;
-	padding: 30px;
+	padding: 30px 15px;
 	margin: 20px auto;
 	-webkit-border-radius: 30px;
 	border-radius: 30px;
-	-webkit-box-shadow: #555 0 0 20px 4px;
+	-webkit-box-shadow: #555 0 0 10px 3px;
 }
 
 #host-container button {
@@ -227,4 +227,29 @@ button:focus {
 
 #host-button-b:active {
 	background: -webkit-gradient(linear, 0 0, 0 bottom, from(rgba(0,0,0,0.4)), to(rgba(0,0,0,0.0))), #FF0000;
+}
+
+#host-button-c {
+	background: -webkit-gradient(linear, 0 0, 0 bottom, from(rgba(255,255,255,0.4)), to(rgba(255,255,255,0.0))), #088C1A;
+}
+
+#host-button-c:hover {
+	background: -webkit-gradient(linear, 0 0, 0 bottom, from(rgba(255,255,255,0.4)), to(rgba(255,255,255,0.1))), #088C1A;
+}
+
+#host-button-c:active {
+	background: -webkit-gradient(linear, 0 0, 0 bottom, from(rgba(0,0,0,0.4)), to(rgba(0,0,0,0.0))), #088C1A;
+}
+
+#song {
+	position: fixed;
+	bottom: 0;
+	left: 50%;
+	margin-left: -150px;
+	-webkit-transition: bottom 300ms;	
+}
+
+#song.hidden {
+	bottom: -40px;
+
 }
