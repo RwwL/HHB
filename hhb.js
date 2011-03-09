@@ -3,6 +3,10 @@ var ballRadius = 10;
 var intervalId = 0;
 var pfWidth = 1024;
 var pfHeight = 768;
+var pfSafeYTop = 200;
+var pfSafeYBottom = 550;
+var pfSafeXLeft = 350;
+var pfSafeXRight = 650;
 var firstDraw = true;
 var pigCount = 50;
 var pigs = [];
@@ -21,7 +25,7 @@ var gameStates = {
 	isPaused: 2,
 	isOver: 3
 }
-var fps = 30;
+var fps = 24;
 
 // preload
 for(var prop in birdImgs) {
@@ -155,6 +159,15 @@ function Bird(x, y, color, axis, direction, id, imgSrc, captureX, captureY, repo
 }
 
 function inCaptureArea(centerX, centerY, cRadius, pointX, pointY) {
+
+	if (centerX < 512) {
+		if (pointX > pfSafeXLeft)
+		return false;
+	} else if (pointX < pfSafeXRight) {
+		return false;
+	}
+	if (pointY > pfSafeYBottom || pointY < pfSafeYTop) return false;
+
 	var squareDistance = (square(centerX - pointX)) + (square((centerY - pointY)));
 	return squareDistance < square(cRadius);
 }
@@ -274,7 +287,7 @@ function startDirectionRandomizer() {
 }
 
 function pigVelocityRandomizer() {
-	var num = Math.ceil(Math.random()*35) * startDirectionRandomizer();
+	var num = Math.ceil(Math.random()*32) * startDirectionRandomizer();
 	return num;
 }
 
