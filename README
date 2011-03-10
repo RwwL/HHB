@@ -1,8 +1,17 @@
 A mashup of Hungry Hungry Hippos and Angry Birds, JavaScript + HTML5 canvas element.
 
-Right now all images in the repo are embedded directly in the source as data URLs to save on HTTP requests.
+Includes a node.js websocket server component for a remote control.
 
-Possible TODO items:
-	- circular playfield instead of square
-	- find workaround for Firefox typeaheadfind issue on keypress
-	- small bird images in the "controls" legend
+instructions to run:
+
+To simply run the game:
+- launch index.html in Google Chrome
+- run hhbKinect.app
+
+To calibrate the Kinect better for the space available, see onscreen instructions to adjust near and far threshholds.
+
+To use the remote control:
+- make sure Web Sharing is on and that the index.html is being accessed through the server on the machine
+- make sure costants.js includes the machine name or IP address of the machine it's on
+- cd to the HHB directory and run "node socket.js" from the command line
+- load up the remote control (gameHost.html) in Safari on an iOS device.
