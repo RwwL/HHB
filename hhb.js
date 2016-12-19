@@ -1,8 +1,18 @@
-var birdCanvas, birdFacesCanvas, pigCanvas, staticCanvas, eastReport, westReport, eastBird, westBird;
+var birdCanvas,
+	birdFacesCanvas,
+	pigCanvas,
+	staticCanvas,
+	eastReport,
+	westReport,
+	northReport,
+	southReport,
+	eastBird,
+	westBird,
+	northBird,
+	southBird;
 var ballRadius = 10;
 var intervalId = 0;
-var pfWidth = 1024;
-var pfHeight = 768;
+var pfWidth = pfHeight = 800;
 var pfSafeYTop = 200;
 var pfSafeYBottom = 550;
 var pfSafeXLeft = 350;
@@ -24,7 +34,7 @@ var gameStates = {
 	isPlaying: 1,
 	isPaused: 2,
 	isOver: 3
-}
+};
 var fps = 24;
 
 // preload
@@ -53,7 +63,7 @@ function showCapture(x, y, pointVal) {
 	$score.appendTo('#wrap').bind('webkitTransitionEnd', function(e) {
 		$(e.srcElement).remove();
 	});
-	setTimeout( function() { $score.addClass('transition') }, 0); // setTimeout makes sure it's rendered onscreen before adding the class... required to kick off transitions
+	setTimeout( function() { $score.addClass('transition'); }, 0); // setTimeout makes sure it's rendered onscreen before adding the class... required to kick off transitions
 }
 
 function Pig(x, y, imgNum) {
@@ -118,7 +128,7 @@ function Bird(x, y, color, axis, direction, id, imgSrc, captureX, captureY, repo
 				self.retreat();
 			}
 		});
-	},
+	};
 	this.retreat = function() {
 		var self = this;
 		self.radius = self.defaultRadius;
@@ -137,14 +147,14 @@ function Bird(x, y, color, axis, direction, id, imgSrc, captureX, captureY, repo
 
 			}
 		});
-	}
+	};
 	this.capture = function() {
 
 		var r = this.reportContext;
 
 		for(i=0; i<pigCount; i++) {
 
-			if (pigs[i].inPlay == false) continue;
+			if (pigs[i].inPlay === false) continue;
 
 			if ( inCaptureArea(this.captureX, this.captureY, this.captureRadius, pigs[i].centerX, pigs[i].centerY) ) {
 				showCapture(pigs[i].centerX, pigs[i].centerY, pigs[i].pointVal);
@@ -155,7 +165,7 @@ function Bird(x, y, color, axis, direction, id, imgSrc, captureX, captureY, repo
 				if (capturedPigs.length == pigCount) gameOver();
 			}
 		}
-	}
+	};
 }
 
 function inCaptureArea(centerX, centerY, cRadius, pointX, pointY) {
@@ -233,10 +243,10 @@ function drawPig(pig) {
 
 	if (!pig.inPlay) return;
 	if (pig.x + pig.xVel < 0 || pig.x + pig.xVel + pig.width > pfWidth ) {
-		pig.xVel = -pig.xVel
+		pig.xVel = -pig.xVel;
 	}
 	if (pig.y + pig.yVel < 0 || pig.y + pig.yVel + pig.height > pfHeight ) {
-		pig.yVel = -pig.yVel
+		pig.yVel = -pig.yVel;
 	}
 	pigCanvas.drawImage(pig.pigImg, pig.x += pig.xVel, pig.y += pig.yVel );
 }
@@ -271,6 +281,7 @@ function bindGameplayHandlers() {
 			case 13: // enter
 				e.preventDefault();
 				setPigSpeedsAndDirections();
+				break;
 			default:
 				break;
 		}
@@ -283,7 +294,7 @@ function unbindGameplayHandlers() {
 
 function startDirectionRandomizer() {
 	var num = (Math.floor(Math.random()*5)) + 1;
-	return (num % 2 == 0) ? 1 : -1;
+	return (num % 2 === 0) ? 1 : -1;
 }
 
 function pigVelocityRandomizer() {
@@ -301,7 +312,7 @@ function startOrContinue() {
 	// send a random keydown (t) to the playfield to make sure it's focused to get events from Kinect
 	var e = jQuery.Event('keydown');
 	e.keyCode = 84;
-	$(document).trigger(e)
+	$(document).trigger(e);
 
 	return intervalId;
 
@@ -353,7 +364,7 @@ function init() {
 		$(body).empty().html('<p>This browser doesn\'t support the canvas element. Try <a href="http://google.com/chrome">one</a> <a href="http://getfirefox.com">that</a> <a href="http://ie.microsoft.com/testdrive/">does</a>.');
 	}
 
-	if (intervalId != undefined) clearInterval(intervalId);
+	if (intervalId !== undefined) clearInterval(intervalId);
 
 	pigs = [];
 	birds = [];
@@ -467,7 +478,7 @@ function draw() {
 
 	for(i=0; i<pigCount; i++)
 	{
-		if (pigs[i].inPlay == true) {
+		if (pigs[i].inPlay === true) {
 			pigs[i].centerX = pigs[i].x + pigs[i].imgOffsetX;
 			pigs[i].centerY = pigs[i].y	 + pigs[i].imgOffsetY;
 			drawPig(pigs[i]);
@@ -536,31 +547,6 @@ function toggleMusicPlayback() {
 		song.pause();
 	}
 }
-
-// socket server connection for remote control
-// NOTE CONSTANTS.JS MUST CONTAIN NAME OR IP ADDRESS OF THE MACHINE RUNNING THE SOCKET SERVER
-$(document).ready(function(){
-
-	var client = new SocketClient(exports.CLIENT_TYPE_BOARD, exports.SOCKET_ADDRESS);
-	client.listen(function(msg){
-
-	    switch (msg.message) {
-	    	case 'startOrContinue':
-	    		$('#start').click();
-	    		break;
-	    	case 'redirectPigs':
-	    		setPigSpeedsAndDirections();
-	    		break;
-	    	case 'toggleMusic':
-	    		toggleMusicPlayback();
-	    		break;
-	    	default:
-	    		break;
-	    }
-
-	});
-
-});
 
 // using window.load instead of document.ready to make sure all the external and dataURL images are loaded
 $(window).load(function() {

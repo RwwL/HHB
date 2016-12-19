@@ -2,21 +2,22 @@ body, html {
 	margin: 0;
 	padding: 0;
 	background: #2a8975; /* aka rgb(42,137,117), angry birds teal. angry birds yellow = #ffd308 */
-	color: white;				
+	color: white;
 	font-size: 18px;
 	line-height: 24px;
 	font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
 	overflow: hidden;
+	height: 100%
+	width: 100%;
 }
 
 #wrap {
-	width: 1024px;
-	height: 768px;
+	width: 800px;
+	height: 800px;
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	margin: -384px 0 0 -512px;
-	overflow: hidden;
+	transform: translate(-50%, -50%);
 }
 
 b.score {
@@ -26,19 +27,19 @@ b.score {
 	letter-spacing: -1px;
 	color: #bf0000;
 	text-shadow: 1px 1px white;
-	-webkit-transition-property: -webkit-transform, scale, opacity;
-	-webkit-transition-duration: 750ms;
-	-webkit-transition-delay: 0;
-	-webkit-transform: translateZ(0);
+	transition-property: transform, scale, opacity;
+	transition-duration: 750ms;
+	transition-delay: 0;
+	transform: translateZ(0);
 	position: absolute;
 	top: 0;
 	left: 0;
-	margin: -6px 0 0 -4px;
+	transform: translate(-50%, -50%);
 }
 
 b.score.transition {
 	opacity: 0;
-	-webkit-transform: scale(2) translateY(-30px) translateZ(0);
+	transform: scale(2) translateY(-30px) translateZ(0);
 }
 
 a {
@@ -56,33 +57,27 @@ h1 {
 
 #logo {
 	display: block;
-	margin: 0 auto;			
+	margin: 0 auto;
 }
 
 #playfield {
 	position: absolute;
 	top: 0px;
 	left: 0px;
-	width: 1024px;
-	height: 768px;
+	width: 800px;
+	height: 800px;
 }
 
 #playfieldLogo {
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	margin: -61px 0 0 -107px;
-}
-
-#friedolin {
-	position: absolute;
-	bottom: 25px;
-	right: 25px;
+	transform: translate(-50%, -50%);
 }
 
 #hhb, #pigs, #static, #birdFaces, #eastReport, #westReport {
 	position: absolute;
-	background: transparent; 
+	background: transparent;
 	display: block;
 	margin: 0px auto;
 }
@@ -93,9 +88,8 @@ h1 {
 
 b.feedback {
 	position: absolute;
-	top: 20px;
 	background: rgba(0,0,0, .25);
-	-webkit-border-radius: 8px;
+	-border-radius: 8px;
 	color: white;
 	text-shadow: #222 3px 3px 7px;
 	display: block;
@@ -105,12 +99,36 @@ b.feedback {
 	font-size: 36px;
 }
 
+#nScore, #sScore {
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.playerLabel + .playerLabel {
+	margin-left: 20px;
+}
+
+
+#nScore {
+	top: -70px;
+}
+
+#sScore {
+	bottom: -70px;
+}
+
+#eScore, #wScore {
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+
 #eScore {
-	right: 20px;
+	right: -80px;
 }
 
 #wScore {
-	left: 20px
+	left: -80px
 }
 
 #victor {
@@ -126,34 +144,33 @@ b.feedback {
 
 #mask {
 	position: absolute;
-	width: 1024px;
-	height: 768px;
+	width: 800px;
+	height: 800px;
 	background: rgba(42,137,117, .76);
-	-webkit-transition: -webkit-transform ease-in-out 700ms;
-	-webkit-transform: scale(1) rotate(0deg);
+	transition: transform ease-in-out 700ms;
+	transform: scale(1) rotate(0deg);
 }
 
 #mask.offscreen {
-	-webkit-transform: scale(0) rotate(-310deg);
+	transform: scale(0) rotate(-310deg);
 }
 
 #details {
 	position: absolute;
-	top: 175px;
+	top: 50%;
 	left: 50%;
 	width: 420px;
 	background: white;
 	color: #333;
 	text-align: center;
 	padding: 20px 30px;
-	margin: 0 0 0 -240px;
-	-webkit-border-radius: 30px;
+	transform: translate(-50%, -50%);
 	border-radius: 30px;
-	-webkit-box-shadow: #555 0 0 20px 4px;
+	box-shadow: #555 0 0 20px 4px;
 }
 
 h1 {
-	margin: 0; 
+	margin: 0;
 	padding: 0;
 }
 
@@ -174,71 +191,32 @@ p {
 button {
 	-webkit-appearance: none;
 	border: none;
-	display: block;
+	display: inline-block;
+	vertical-align: middle;
 	margin: 24px auto 18px;
-	font-size: 24px;
-	padding: 8px 0 12px;
-	width: 50%;
-	-webkit-border-radius: 1000px;
-	background: -webkit-gradient(linear, 0 0, 0 bottom, from(rgba(255,255,255,0.4)), to(rgba(255,255,255,0.0))), #1c3494;
+	font-size: 20px;
+	padding: 8px 20px 12px;
+	border-radius: 1000px;
+	background: linear-gradient(to bottom, rgba(255,255,255,0.4), rgba(255,255,255,0.0)), #1c3494;
 	color: white;
 	text-shadow: #222 1px 1px 2px;
-	-webkit-box-shadow: 0 2px 4px rgba(0,0,0, .5);
-	-webkit-user-select: none;
+	box-shadow: 0 2px 4px rgba(0,0,0, .5);
+	-user-select: none;
 	-webkit-touch-callout: none;
 	-webkit-tap-highlight-color: rgba(0,0,0,0);
 }
-			
+
 button:hover {
-	background: -webkit-gradient(linear, 0 0, 0 bottom, from(rgba(255,255,255,0.4)), to(rgba(255,255,255,0.1))), #1c3494;
+	background: linear-gradient(to bottom, rgba(255,255,255,0.4), rgba(255,255,255,0.1)), #1c3494;
 }
 
 button:active {
-	background: -webkit-gradient(linear, 0 0, 0 bottom, from(rgba(0,0,0,0.4)), to(rgba(0,0,0,0.0))), #1c3494;
+	outline: none;
+	background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.0)), #1c3494;
 }
 
 button:focus {
 	outline: none;
-}
-
-#host-container {
-	background: white;
-	width: 280px;
-	color: #333;
-	text-align: center;
-	padding: 30px 15px;
-	margin: 20px auto;
-	-webkit-border-radius: 30px;
-	border-radius: 30px;
-	-webkit-box-shadow: #555 0 0 10px 3px;
-}
-
-#host-container button {
-	width: 85%;
-}
-
-#host-button-b {
-	background: -webkit-gradient(linear, 0 0, 0 bottom, from(rgba(255,255,255,0.4)), to(rgba(255,255,255,0.0))), #FF0000;
-}
-
-#host-button-b:hover {
-	background: -webkit-gradient(linear, 0 0, 0 bottom, from(rgba(255,255,255,0.4)), to(rgba(255,255,255,0.1))), #FF0000;
-}
-
-#host-button-b:active {
-	background: -webkit-gradient(linear, 0 0, 0 bottom, from(rgba(0,0,0,0.4)), to(rgba(0,0,0,0.0))), #FF0000;
-}
-
-#host-button-c {
-	background: -webkit-gradient(linear, 0 0, 0 bottom, from(rgba(255,255,255,0.4)), to(rgba(255,255,255,0.0))), #088C1A;
-}
-
-#host-button-c:hover {
-	background: -webkit-gradient(linear, 0 0, 0 bottom, from(rgba(255,255,255,0.4)), to(rgba(255,255,255,0.1))), #088C1A;
-}
-
-#host-button-c:active {
-	background: -webkit-gradient(linear, 0 0, 0 bottom, from(rgba(0,0,0,0.4)), to(rgba(0,0,0,0.0))), #088C1A;
 }
 
 #song {
@@ -246,10 +224,16 @@ button:focus {
 	bottom: 0;
 	left: 50%;
 	margin-left: -150px;
-	-webkit-transition: bottom 300ms;	
+	transition: bottom 300ms ease
 }
 
 #song.hidden {
 	bottom: -40px;
 
 }
+
+.twoPlayer #nScore,
+.twoPlayer #sScore {
+	display: none;
+}
+

@@ -7,33 +7,31 @@
 		<script type="text/javascript" src="jquery-1.5.1.min.js"></script>
 		<script type="text/javascript" src="hhb-img.js"></script>
 		<script type="text/javascript" src="hhb.js"></script>
-		<script type="text/javascript" src="jquery.json-2.2.min.js"></script>
-		<script type="text/javascript" src="SocketClient.js"></script>
-		<script type="text/javascript" src="constants.js"></script>
 	</head>
 	<body>
-		<div id="wrap">
+		<div id="wrap" class="twoPlayer">
 			<div id="playfield">
-				<canvas id="static" width="1024" height="768"></canvas>
-				<img id="friedolin" src="i/friedolin_100x62.png" alt="friedolin" width="100" height="62" />
-				<canvas id="pigs" width="1024" height="768"></canvas>
-				<canvas id="hhb" width="1024" height="768"></canvas>
-				<canvas id="birdFaces" width="1024" height="768">
-					<p>This browser doesn't support the HTML5 <code>canvas</code> element. Try <a href="http://google.com/chrome">one</a> <a href="http://getfirefox.com">that</a> <a href="http://ie.microsoft.com/testdrive/">does</a>.</p>
+				<canvas id="static" width="800" height="800"></canvas>
+				<canvas id="pigs" width="800" height="800"></canvas>
+				<canvas id="hhb" width="800" height="800"></canvas>
+				<canvas id="birdFaces" width="800" height="800">
+					<p>This browser doesn't support the HTML5 <code>canvas</code> element. Try <a href="http://google.com/chrome">one</a> <a href="http://getfirefox.com">that</a> <a href="https://www.microsoft.com/en-us/windows/microsoft-edge/">does</a>.</p>
 				</canvas>
-				<canvas id="eastReport" width="1024" height="768"></canvas>
-				<canvas id="westReport" width="1024" height="768"></canvas>
+				<canvas id="northReport" width="800" height="800"></canvas>
+				<canvas id="southReport" width="800" height="800"></canvas>
+				<canvas id="eastReport" width="800" height="800"></canvas>
+				<canvas id="westReport" width="800" height="800"></canvas>
 			</div>
 			<div id="mask">
 				<div id="details">
-
 					<h1><img id="logo" width="213" height="122" alt="Hungry Hungry Birds" src="./i/logo.png" /></h1>
-
-					<p><b>Use the keyboard</b> to lunge for the pigs in your bird's white circle. But <b>time it just right</b>: you only eat 'em if they're in the circle right at the instant when you land.</p>
-
-					<p><button id="start2">play 2 player</button></p>
-					<p><button id="start4">play 4 player</button></p>
-
+					<p><b>Use the keyboard</b> to lunge for the pigs in your bird's white circle.</p>
+					<p>But <b>time it just right</b>: you only eat 'em if they're in the circle right at the instant when you land.</p>
+					<p>
+						<label class="playerLabel"><input type="radio" name="mode" value="2" checked> 2-player</label>
+						<label class="playerLabel"><input type="radio" name="mode" value="4"> 4-player</label><br>
+						<button id="start">start</button>
+					</p>
 					<p id="disclaimer">Made for ☺, not $. No copyrights claimed.<br>Kindly refrain from filing lawsuits over something this silly.<br>These aren't the droids you're looking for.</p>
 				</div>
 			</div>
@@ -42,7 +40,6 @@
 			<b class="feedback" id="eScore">0</b>
 			<b class="feedback" id="wScore">0</b>
 			<b class="feedback" id="victor"></b>
-
 		</div>
 		<audio class="hidden" id="song" src="Angry-Birds-Main-Theme-Song.mp3" controls loop preload="auto"></audio>
 	</body>
