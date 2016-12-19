@@ -381,12 +381,16 @@ function init() {
 	staticCanvas = document.getElementById('static').getContext('2d');
 	eastReport = document.getElementById('eastReport').getContext('2d');
 	westReport = document.getElementById('westReport').getContext('2d');
+	northReport = document.getElementById('northReport').getContext('2d');
+	southReport = document.getElementById('southReport').getContext('2d');
 
 	birdCanvas.clearRect(0, 0, pfWidth, pfHeight);
 	pigCanvas.clearRect(0, 0, pfWidth, pfHeight);
 	birdFacesCanvas.clearRect(0, 0, pfWidth, pfHeight);
 	eastReport.clearRect(0, 0, pfWidth, pfHeight);
 	westReport.clearRect(0, 0, pfWidth, pfHeight);
+	northReport.clearRect(0, 0, pfWidth, pfHeight);
+	southReport.clearRect(0, 0, pfWidth, pfHeight);
 	staticCanvas.clearRect(0, 0, pfWidth, pfHeight);
 
 	// generate pigs w/ randomized start position & imgNum
@@ -438,6 +442,11 @@ function init() {
 	eastBird 	= new Bird( pfWidth, pfHeight/2, '#64acc8', 'x', -1, 'e', birdImgs.blueBird,  pfWidth-captureOffset, pfHeight/2, eastReport );
 	westBird 	= new Bird(   0, pfHeight/2, '#000000', 'x',  1, 'w', birdImgs.blackBird, captureOffset, pfHeight/2, westReport );
 
+						  // x, y, color, axis, direction, id, imgSrc, captureX, captureY, reportContext
+	northBird 	= new Bird( pfWidth / 2, 0, '#ffffff', 'y', 1, 'n', birdImgs.whiteBird,  pfWidth/2,  captureOffset, northReport );
+	southBird 	= new Bird( pfWidth / 2, pfHeight, '#ff0000', 'y',  -1, 's', birdImgs.redBird, pfHeight/2, pfHeight-captureOffset, southReport );
+
+
 	birds = [ eastBird, westBird ];
 
 	for(i=0; i<birdCount; i++)
@@ -471,7 +480,6 @@ function init() {
 }
 
 function draw() {
-
 	birdCanvas.clearRect(0, 0, pfWidth, pfHeight);
 	pigCanvas.clearRect(0, 0, pfWidth, pfHeight);
 	birdFacesCanvas.clearRect(0, 0, pfWidth, pfHeight);
@@ -493,7 +501,7 @@ function draw() {
 	// for debugging... you can log something in draw()
 	// without killing the console via if(firstDraw)
 	// how the hell do real game-loop developers do this?
-	//firstDraw = false;
+	// firstDraw = false;
 
 }
 

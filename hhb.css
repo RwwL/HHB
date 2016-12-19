@@ -75,7 +75,7 @@ h1 {
 	transform: translate(-50%, -50%);
 }
 
-#hhb, #pigs, #static, #birdFaces, #eastReport, #westReport {
+#hhb, #pigs, #static, #birdFaces, #eastReport, #westReport, #northReport, #southReport {
 	position: absolute;
 	background: transparent;
 	display: block;
