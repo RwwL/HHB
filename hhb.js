@@ -12,7 +12,8 @@ var birdCanvas,
 	southBird;
 var ballRadius = 10;
 var intervalId = 0;
-var pfWidth = pfHeight = 800;
+var pfWidth = 800;
+var pfHeight = 800;
 var pfSafeYTop = 200;
 var pfSafeYBottom = 550;
 var pfSafeXLeft = 350;
