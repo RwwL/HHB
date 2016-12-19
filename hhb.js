@@ -22,7 +22,7 @@ var firstDraw = true;
 var pigCount = 50;
 var pigs = [];
 var capturedPigs = [];
-var birdCount = 2;
+var birdCount = 4;
 var birds = [];
 var captureOffset = 150;
 var pigStartRadius = 250;
@@ -266,6 +266,18 @@ function drawBird(bird) {
 function bindGameplayHandlers() {
 	$(document).bind('keydown.gameplay', function(e) {
 		switch(e.keyCode) {
+			case 84: // T
+				e.preventDefault();
+				if (!northBird.launched) {
+					northBird.launch();
+				}
+				break;
+			case 66: // B
+				e.preventDefault();
+				if (!southBird.launched) {
+					southBird.launch();
+				}
+				break;
 			case 76: // L
 				e.preventDefault();
 				if (!eastBird.launched) {
@@ -441,13 +453,11 @@ function init() {
 
 	eastBird 	= new Bird( pfWidth, pfHeight/2, '#64acc8', 'x', -1, 'e', birdImgs.blueBird,  pfWidth-captureOffset, pfHeight/2, eastReport );
 	westBird 	= new Bird(   0, pfHeight/2, '#000000', 'x',  1, 'w', birdImgs.blackBird, captureOffset, pfHeight/2, westReport );
-
-						  // x, y, color, axis, direction, id, imgSrc, captureX, captureY, reportContext
 	northBird 	= new Bird( pfWidth / 2, 0, '#ffffff', 'y', 1, 'n', birdImgs.whiteBird,  pfWidth/2,  captureOffset, northReport );
 	southBird 	= new Bird( pfWidth / 2, pfHeight, '#ff0000', 'y',  -1, 's', birdImgs.redBird, pfHeight/2, pfHeight-captureOffset, southReport );
 
 
-	birds = [ eastBird, westBird ];
+	birds = [ northBird, southBird, eastBird, westBird ];
 
 	for(i=0; i<birdCount; i++)
 	{
