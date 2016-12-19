@@ -188,12 +188,11 @@ function victoryMessage(winner, loser) {
 			'<b>' + winner + '</b> is victorious!',
 			'and the winner is... <b>' + winner + '</b>!',
 			'<b>' + winner + '</b> takes it all!',
-			'<b>' + winner + '</b> tastes of win and God',
-			'all <b>' + loser + '</b>\'s base are belong to <b>' + winner + '</b>',
-			'sorry, <b>' + loser + '</b>, you got served, yo',
-			'awwww snap! <b>' + winner + '</b> schooled you, <b>' + loser + '</b>',
-			'<b>' + winner + "</b>: thrill of victory! &nbsp;★&nbsp; <b>" + loser + "</b>: agony of defeat.",
-			'epic win: <b>' + winner + '</b> &nbsp;★&nbsp; epic fail: <b>' + loser + '</b>'
+			'all your base are belong to <b>' + winner + '</b>',
+			'sorry, y\'all got served, ' + winner + ' wins',
+			'awwww snap! <b>' + winner + '</b> schooled you all',
+			'<b>' + winner + "</b>: thrill of victory! &nbsp;★&nbsp; <b>others</b>: agony of defeat.",
+			'epic win: <b>' + winner + '</b> &nbsp;★&nbsp; epic fail: <b>others</b>'
 
 	];
 	var index = Math.floor( Math.random()* messages.length);
